@@ -21,7 +21,11 @@
             return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
                 if ( ! res.description) return;
 
-                cache[cacheKeyName] = { description : res.description };
+                cache[cacheKeyName] = {
+                    description: res.description,
+                    full_name:  res.full_name
+                };
+
                 chrome.storage.sync.set({
                     'feedData': cache
                 });
@@ -66,13 +70,15 @@
 
     })();
 
-    var repoTooltip =  function($el, content) {
-        var $tooltip = $el.siblings('.repo-tooltip');
+    var repoTooltip =  function($el, data) {
+        var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace('/', '-'));
+
         $el.removeAttr("title");
         if (! $tooltip.length) {
             $tooltip = $('<div />', {
+                'id' : 'repo-tooltip-' + data.full_name.replace('/', '-'),
                 'class' : 'ginfo-tooltip repo-tooltip',
-                html : content
+                html : data.description
             });
             $tooltip.append('<i class="arrow-down"></i>')
                 .appendTo($el.parent());
@@ -133,9 +139,12 @@
             if (hrefSplit[2]) {
                 // Repo
                 API.getRepo(hrefSplit[1], hrefSplit[2], function(res) {
-                    repoTooltip($self, res.description);
+                    repoTooltip($self, res);
                 }, function(req) {
-                    repoTooltip($self, "Error : " + JSON.parse(req.responseText)['message']);
+                    repoTooltip($self, {
+                        full_name: 'error-' + hrefSplit[1] + hrefSplit[2],
+                        description: "Error : " + JSON.parse(req.responseText)['message']
+                    });
                 });
 
             } else {
@@ -144,7 +153,10 @@
                     userTooltip($self, res);
                 }, function(req) {
                     // repoTooltip is creation simple tooltip.
-                    repoTooltip($self, "Error : " + JSON.parse(req.responseText)['message']);
+                    repoTooltip($self, {
+                        full_name: 'error-' + hrefSplit[1],
+                        description: "Error : " + JSON.parse(req.responseText)['message']
+                    });
                 });
             }
 
