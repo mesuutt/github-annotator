@@ -9,7 +9,7 @@
     },
     "permissions": [ "storage"],
     "description": "Show user and repo informations on news feed",
-    "name": "Show user and repo informations on new feed",
+    "name": "Show user and repo informations on news feed",
     "manifest_version": 2,
     "version": "0.1",
    "icons": {
