@@ -1,0 +1,36 @@
+.ginfo-tooltip {
+    position: absolute;
+    z-index: 3;
+    display:none;
+    padding: 5px;
+    background: #333;
+    color: #fff;
+    max-width: 600px;
+}
+
+.user-tooltip {
+    height:35px;
+}
+
+.user-tooltip .tooltip-content {
+    height: inherit;
+    display: block;
+}
+.user-tooltip .tooltip-content img {
+    width:35px;
+}
+
+.user-tooltip .tooltip-content div {
+    display: inline-block;
+    float: left;
+    height: inherit;
+}
+
+.user-tooltip .tooltip-content .info-con {
+    margin-left:5px;
+}
+
+.user-tooltip .tooltip-content .info-con  span {
+    display:block;
+    width:100%;
+}
