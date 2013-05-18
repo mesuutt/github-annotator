@@ -3,9 +3,9 @@
     z-index: 3;
     display:none;
     padding: 5px;
+    max-width: 600px;
     background: #333;
     color: #fff;
-    max-width: 600px;
 }
 
 .user-tooltip {
@@ -13,8 +13,8 @@
 }
 
 .user-tooltip .tooltip-content {
-    height: inherit;
     display: block;
+    height: inherit;
 }
 .user-tooltip .tooltip-content img {
     width:35px;
@@ -33,4 +33,15 @@
 .user-tooltip .tooltip-content .info-con  span {
     display:block;
     width:100%;
+}
+
+.arrow-down {
+    position: absolute;
+    bottom: -5px;
+    left: 16px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid #333;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
 }

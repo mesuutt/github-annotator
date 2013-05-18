@@ -74,8 +74,8 @@
                 'class' : 'ginfo-tooltip repo-tooltip',
                 html : content
             });
-
-            $el.parent().append($tooltip);
+            $tooltip.append('<i class="arrow-down"></i>')
+                .appendTo($el.parent());
         }
 
         $tooltip.css({
@@ -92,6 +92,7 @@
         if (!$tooltip.length) {
 
             var template = [
+                '<i class="arrow-down"></i>',
                 '<div class="tooltip-content">',
                     '<div><img src="'+data.avatar_url+ '"/></div>',
                     '<div class="info-con">',
