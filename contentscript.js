@@ -21,6 +21,7 @@
             return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
                 if ( ! res.description) return;
 
+                // Cache only required values
                 cache[cacheKeyName] = {
                     description: res.description,
                     full_name:  res.full_name
@@ -41,18 +42,21 @@
             }
 
             return getReq(apiRoot + '/users/' + username, function(res) {
+
+                // Cache only required values
                 cache[cacheKeyName] = {
                     login: res.login,
-                    name : res.name,
-                    avatar_url : res.avatar_url,
-                    public_repos : res.public_repos,
-                    followers : res.followers,
-                    following : res.following
+                    name: res.name,
+                    avatar_url: res.avatar_url,
+                    public_repos: res.public_repos,
+                    followers: res.followers,
+                    following: res.following
                 };
 
                 chrome.storage.sync.set({
                     'feedData': cache
                 });
+
                 cb(res);
             }, failcb);
         },
@@ -152,7 +156,7 @@
                 API.getUser(hrefSplit[1], function(res) {
                     userTooltip($self, res);
                 }, function(req) {
-                    // repoTooltip is creation simple tooltip.
+                    // repoTooltip is creating simple tooltip. So using it
                     repoTooltip($self, {
                         full_name: 'error-' + hrefSplit[1],
                         description: "Error : " + JSON.parse(req.responseText)['message']
@@ -163,7 +167,7 @@
             $self.closest(".alert.simple").css('overflow', 'visible');
         });
 
-         $("#dashboard .news").on("mouseout", ".alert.simple .title a", function(e) {
+        $("#dashboard .news").on("mouseout", ".alert.simple .title a", function(e) {
             $(".ginfo-tooltip").css('display', 'none');
         });
     });
