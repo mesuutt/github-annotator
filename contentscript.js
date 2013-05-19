@@ -3,14 +3,24 @@
         var apiRoot = "https://api.github.com",
         cache = {},
         noop = function(){},
+        activeRequest,
         getReq = function(url, cb, failcb) {
-            var req = $.get(url)
-                .done(cb)
+            if (activeRequest) {
+                activeRequest.abort();
+            }
+
+            var request = $.get(url);
+
+            activeRequest = request;
+            request.done(cb)
                 .fail(function() {
-                    (failcb || noop)(req);
+                    (failcb || noop)(request);
+                })
+                .always(function() {
+                    activeRequest = false;
                 });
 
-            return req;
+            return request;
         },
         getRepo = function(owner, repo , cb, failcb) {
             var key = 'repo_' + owner + repo;
