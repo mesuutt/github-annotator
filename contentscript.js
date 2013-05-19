@@ -42,7 +42,9 @@
             // Cache only required values
             cache[key] = {
                 description: res.description,
-                full_name:  res.full_name
+                full_name:  res.full_name,
+                watchers_count: res.watchers_count,
+                forks_count: res.forks_count
             };
 
             chrome.storage.sync.set({
