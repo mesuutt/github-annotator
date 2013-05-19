@@ -97,13 +97,26 @@
 
         $el.removeAttr("title");
         if (! $tooltip.length) {
+            var template = [
+                '<i class="arrow-down"></i>',
+                '<div class="tooltip-content">',
+                    '<div class="info-con">',
+                        data.description ? '<span>'+data.description+'</span>' : '' ,
+                        '<div class="starring-con">',
+                            [
+                                data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
+                                data.forks_count ? '<i class="octicon octicon-git-branch"></i>' + data.forks_count +' forks' : ''
+                            ].filter(function(item){ return item; }).join('  '),
+                        '</div>',
+                    '</div>',
+                '</div>'
+            ];
+
             $tooltip = $('<div />', {
                 'id' : 'repo-tooltip-' + data.full_name.replace('/', '-'),
                 'class' : 'ginfo-tooltip repo-tooltip',
-                html : data.description
-            });
-            $tooltip.append('<i class="arrow-down"></i>')
-                .appendTo($el.parent());
+                html : template.filter(function(item){ return item;}).join('') // Remove Description's span if empty
+            }).appendTo($el.parent());
         }
 
         $tooltip.css({
@@ -130,7 +143,7 @@
                                 data.public_repos ? data.public_repos + ' repos' : '',
                                 data.followers ? data.followers +' followers' : '',
                                 data.following ? data.following + ' following' : ''
-                            ].filter(function(item){ return item }).join(', '),
+                            ].filter(function(item){ return item; }).join(', '),
                         '</span>',
                     '</div>',
                 '</div>'
