@@ -11,7 +11,7 @@
     "description": "Show user and repo informations on news feed",
     "name": "Github user & repo informations on news feed",
     "manifest_version": 2,
-    "version": "0.2",
+    "version": "0.3",
    "icons": {
         "128": "icon128.png",
         "48": "icon48.png",
