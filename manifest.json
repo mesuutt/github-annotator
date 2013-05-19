@@ -1,4 +1,9 @@
 {
+    "name": "Github user & repo informations on news feed",
+    "description": "Show user and repo informations on news feed",
+    "manifest_version": 2,
+    "version": "0.3",
+    "permissions": [ "storage"],
     "content_scripts": [{
         "js": [ "jquery-1.9.1.min.js", "contentscript.js" ],
         "css": [ "style.css" ],
@@ -7,11 +12,6 @@
     "background": {
         "scripts": ["background.js"]
     },
-    "permissions": [ "storage"],
-    "description": "Show user and repo informations on news feed",
-    "name": "Github user & repo informations on news feed",
-    "manifest_version": 2,
-    "version": "0.3",
    "icons": {
         "128": "icon128.png",
         "48": "icon48.png",
