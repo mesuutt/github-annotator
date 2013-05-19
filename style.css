@@ -7,12 +7,11 @@
     background: #333;
     color: #fff;
 }
-
 .user-tooltip {
     height:35px;
 }
 
-.user-tooltip .tooltip-content {
+.ginfo-tooltip .tooltip-content {
     display: block;
     height: inherit;
 }
@@ -30,12 +29,16 @@
     margin-left:5px;
 }
 
-.user-tooltip .tooltip-content .info-con  span {
+.ginfo-tooltip .tooltip-content .info-con > *, .error-con span {
     display:block;
     width:100%;
 }
 
-.arrow-down {
+.ginfo-tooltip .tooltip-content .info-con .octicon-git-branch {
+    margin-left:5px;
+}
+
+.ginfo-tooltip .arrow-down {
     position: absolute;
     bottom: -4px;
     left: 16px;

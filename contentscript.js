@@ -1,64 +1,90 @@
-;(function() {
+;(function($) {
     var API = (function() {
         var apiRoot = "https://api.github.com",
         cache = {},
         noop = function(){},
-        getReq = function(url, cb, failcb) {
-            var req = jQuery.get(url)
-                .done(cb)
+        activeRequest,
+        getReq = function(url, callback, failCallback) {
+            if (activeRequest) {
+                activeRequest.abort();
+            }
+
+            var xhr = $.get(url);
+
+            activeRequest = xhr;
+            xhr.done(callback)
                 .fail(function() {
-                    (failcb || noop)(req);
+                    // If request not aborted
+                    if (xhr.getAllResponseHeaders()){
+                        (failCallback || noop)(xhr);
+                    }
+                })
+                .always(function() {
+                    activeRequest = false;
                 });
+
+            return xhr;
         },
-        getRepo = function(owner, repo , cb, failcb) {
+        getRepo = function(owner, repo , callback, failCallback) {
+            var key = 'repo_' + owner + repo;
 
-            var cacheKeyName = 'repo_' + owner + repo;
-
-            if (cache[cacheKeyName]) {
-                return cb(cache[cacheKeyName]);
+            if (cache[key]) {
+                return callback(cache[key]);
             }
 
             return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
-                if ( ! res.description) return;
-
-                cache[cacheKeyName] = { description : res.description };
-                chrome.storage.sync.set({
-                    'feedData': cache
-                });
-
-                cb(res);
-            }, failcb);
+                cacheRepo(key, res);
+                callback(res);
+            }, failCallback);
         },
-        getUser = function(username, cb, failcb) {
-            var cacheKeyName = 'user_' + username;
+        cacheRepo = function(key, res) {
+            if ( ! res.description) return;
+            // Cache only required values
+            cache[key] = {
+                description: res.description,
+                full_name:  res.full_name
+            };
 
-            if (cache[cacheKeyName]) {
-                return cb(cache[cacheKeyName]);
+            chrome.storage.sync.set({
+                'cache': cache
+            });
+        },
+        getUser = function(username, callback, failCallback) {
+            var key = 'user_' + username;
+
+            if (cache[key]) {
+                return callback(cache[key]);
             }
 
             return getReq(apiRoot + '/users/' + username, function(res) {
-                cache[cacheKeyName] = {
-                    login: res.login,
-                    name : res.name,
-                    avatar_url : res.avatar_url,
-                    public_repos : res.public_repos,
-                    followers : res.followers,
-                    following : res.following
-                };
+                cacheUser(key, res);
+                callback(res);
+            }, failCallback);
+        },
+        cacheUser = function(key, res) {
+            if ( ! res.login) return;
+            // Cache only required values
+            cache[key] = {
+                login: res.login,
+                name: res.name,
+                avatar_url: res.avatar_url,
+                public_repos: res.public_repos,
+                followers: res.followers,
+                following: res.following
+            };
 
-                chrome.storage.sync.set({
-                    'feedData': cache
-                });
-                cb(res);
-            }, failcb);
+            chrome.storage.sync.set({
+                'cache': cache
+            });
         },
         loadCache =  function() {
-            chrome.storage.sync.get('feedData', function (data) {
-                cache = data.feedData;
+            chrome.storage.sync.get('cache', function (data) {
+                cache = data.cache;
             });
         };
 
         loadCache();
+
         return {
             getRepo: getRepo,
             getUser: getUser
@@ -66,16 +92,31 @@
 
     })();
 
-    var repoTooltip =  function($el, content) {
-        var $tooltip = $el.siblings('.repo-tooltip');
+    var repoTooltip =  function($el, data) {
+        var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace('/', '-'));
+
         $el.removeAttr("title");
         if (! $tooltip.length) {
+            var template = [
+                '<i class="arrow-down"></i>',
+                '<div class="tooltip-content">',
+                    '<div class="info-con">',
+                        data.description ? '<span>'+data.description+'</span>' : '' ,
+                        '<div class="starring-con">',
+                            [
+                                data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
+                                data.forks_count ? '<i class="octicon octicon-git-branch"></i>' + data.forks_count +' forks' : ''
+                            ].filter(function(item){ return item; }).join('  '),
+                        '</div>',
+                    '</div>',
+                '</div>'
+            ];
+
             $tooltip = $('<div />', {
+                'id' : 'repo-tooltip-' + data.full_name.replace('/', '-'),
                 'class' : 'ginfo-tooltip repo-tooltip',
-                html : content
-            });
-            $tooltip.append('<i class="arrow-down"></i>')
-                .appendTo($el.parent());
+                html : template.filter(function(item){ return item;}).join('') // Remove Description's span if empty
+            }).appendTo($el.parent());
         }
 
         $tooltip.css({
@@ -102,7 +143,7 @@
                                 data.public_repos ? data.public_repos + ' repos' : '',
                                 data.followers ? data.followers +' followers' : '',
                                 data.following ? data.following + ' following' : ''
-                            ].filter(function(item){ return item }).join(', '),
+                            ].filter(function(item){ return item; }).join(', '),
                         '</span>',
                     '</div>',
                 '</div>'
@@ -133,9 +174,20 @@
             if (hrefSplit[2]) {
                 // Repo
                 API.getRepo(hrefSplit[1], hrefSplit[2], function(res) {
-                    repoTooltip($self, res.description);
+                    repoTooltip($self, res);
                 }, function(req) {
-                    repoTooltip($self, "Error : " + JSON.parse(req.responseText)['message']);
+                    var error;
+                    if (req.status == 403) {
+                        error = '<span>Github limits requests to 60 per hour for unauthenticated requests :( </span>';
+                        error +=  '<span>Error message : ' + JSON.parse(req.responseText)['message'] + '</span>';
+                    } else {
+                        error = JSON.parse(req.responseText)['message'];
+                    }
+
+                    repoTooltip($self, {
+                        full_name: 'error-' + hrefSplit[1] + hrefSplit[2] ,
+                        description: '<div class="error-tooltip">' + error + '</div>'
+                    });
                 });
 
             } else {
@@ -143,16 +195,27 @@
                 API.getUser(hrefSplit[1], function(res) {
                     userTooltip($self, res);
                 }, function(req) {
-                    // repoTooltip is creation simple tooltip.
-                    repoTooltip($self, "Error : " + JSON.parse(req.responseText)['message']);
+                    // repoTooltip is creating simple tooltip. So using it
+                    var error;
+                    if (req.status == 403) {
+                        error = '<span>Github limits requests to 60 per hour for unauthenticated requests :( </span>';
+                        error +=  '<span>Error message : ' + JSON.parse(req.responseText)['message'] + '</span>';
+                    } else {
+                        error = JSON.parse(req.responseText)['message'];
+                    }
+
+                    repoTooltip($self, {
+                        full_name: 'error-' + hrefSplit[1],
+                        description: '<div class="error-con">' + error + '</div>'
+                    });
                 });
             }
 
             $self.closest(".alert.simple").css('overflow', 'visible');
         });
 
-         $("#dashboard .news").on("mouseout", ".alert.simple .title a", function(e) {
+        $("#dashboard .news").on("mouseout", ".alert.simple .title a", function(e) {
             $(".ginfo-tooltip").css('display', 'none');
         });
     });
-})();
+})(jQuery);
