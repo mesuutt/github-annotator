@@ -3,21 +3,21 @@
 
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.set({
-        'feedDataLastClearTime': +new Date(),
-        'feedData': {}
+        'clearTime': +new Date(),
+        'cache': {}
     });
 });
 
 chrome.runtime.onStartup.addListener(function() {
-    chrome.storage.sync.get('feedData', function(data) {
+    chrome.storage.sync.get('cache', function(data) {
         // Clear cache each week
         then = new Date();
         then.setDate (then.getDate() - 7);
-        if (then.getTime() > data.feedDataLastClearTime) {
-             chrome.storage.sync.clear();
-             chrome.storage.sync.set({
-                'feedDataLastClearTime': +new Date()
-             });
+        if (then.getTime() > data.clearTime) {
+            chrome.storage.sync.clear();
+            chrome.storage.sync.set({
+                'clearTime': +new Date()
+            });
         }
     });
 });

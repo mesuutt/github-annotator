@@ -1,72 +1,77 @@
-;(function() {
+;(function($) {
     var API = (function() {
         var apiRoot = "https://api.github.com",
         cache = {},
         noop = function(){},
         getReq = function(url, cb, failcb) {
-            var req = jQuery.get(url)
+            var req = $.get(url)
                 .done(cb)
                 .fail(function() {
                     (failcb || noop)(req);
                 });
+
+            return req;
         },
         getRepo = function(owner, repo , cb, failcb) {
+            var key = 'repo_' + owner + repo;
 
-            var cacheKeyName = 'repo_' + owner + repo;
-
-            if (cache[cacheKeyName]) {
-                return cb(cache[cacheKeyName]);
+            if (cache[key]) {
+                return cb(cache[key]);
             }
 
             return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
-                if ( ! res.description) return;
-
-                // Cache only required values
-                cache[cacheKeyName] = {
-                    description: res.description,
-                    full_name:  res.full_name
-                };
-
-                chrome.storage.sync.set({
-                    'feedData': cache
-                });
-
+                cacheRepo(key, res);
                 cb(res);
             }, failcb);
         },
-        getUser = function(username, cb, failcb) {
-            var cacheKeyName = 'user_' + username;
+        cacheRepo = function(key, res) {
+            if ( ! res.description) return;
+            // Cache only required values
+            cache[key] = {
+                description: res.description,
+                full_name:  res.full_name
+            };
 
-            if (cache[cacheKeyName]) {
-                return cb(cache[cacheKeyName]);
+            chrome.storage.sync.set({
+                'cache': cache
+            });
+        },
+        getUser = function(username, cb, failcb) {
+            var key = 'user_' + username;
+
+            if (cache[key]) {
+                return cb(cache[key]);
             }
 
             return getReq(apiRoot + '/users/' + username, function(res) {
-
-                // Cache only required values
-                cache[cacheKeyName] = {
-                    login: res.login,
-                    name: res.name,
-                    avatar_url: res.avatar_url,
-                    public_repos: res.public_repos,
-                    followers: res.followers,
-                    following: res.following
-                };
-
-                chrome.storage.sync.set({
-                    'feedData': cache
-                });
-
+                cacheUser(key, res);
                 cb(res);
             }, failcb);
         },
+        cacheUser = function(key, res) {
+            if ( ! res.login) return;
+            // Cache only required values
+            cache[key] = {
+                login: res.login,
+                name: res.name,
+                avatar_url: res.avatar_url,
+                public_repos: res.public_repos,
+                followers: res.followers,
+                following: res.following
+            };
+
+            chrome.storage.sync.set({
+                'cache': cache
+            });
+        },
         loadCache =  function() {
-            chrome.storage.sync.get('feedData', function (data) {
-                cache = data.feedData;
+            chrome.storage.sync.get('cache', function (data) {
+                cache = data.cache;
             });
         };
 
         loadCache();
+
         return {
             getRepo: getRepo,
             getUser: getUser
@@ -171,4 +176,4 @@
             $(".ginfo-tooltip").css('display', 'none');
         });
     });
-})();
+})(jQuery);
