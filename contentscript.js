@@ -4,35 +4,38 @@
         cache = {},
         noop = function(){},
         activeRequest,
-        getReq = function(url, cb, failcb) {
+        getReq = function(url, callback, failCallback) {
             if (activeRequest) {
                 activeRequest.abort();
             }
 
-            var request = $.get(url);
+            var xhr = $.get(url);
 
-            activeRequest = request;
-            request.done(cb)
+            activeRequest = xhr;
+            xhr.done(callback)
                 .fail(function() {
-                    (failcb || noop)(request);
+                    // If request not aborted
+                    if (xhr.getAllResponseHeaders()){
+                        (failCallback || noop)(xhr);
+                    }
                 })
                 .always(function() {
                     activeRequest = false;
                 });
 
-            return request;
+            return xhr;
         },
-        getRepo = function(owner, repo , cb, failcb) {
+        getRepo = function(owner, repo , callback, failCallback) {
             var key = 'repo_' + owner + repo;
 
             if (cache[key]) {
-                return cb(cache[key]);
+                return callback(cache[key]);
             }
 
             return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
                 cacheRepo(key, res);
-                cb(res);
-            }, failcb);
+                callback(res);
+            }, failCallback);
         },
         cacheRepo = function(key, res) {
             if ( ! res.description) return;
@@ -46,17 +49,17 @@
                 'cache': cache
             });
         },
-        getUser = function(username, cb, failcb) {
+        getUser = function(username, callback, failCallback) {
             var key = 'user_' + username;
 
             if (cache[key]) {
-                return cb(cache[key]);
+                return callback(cache[key]);
             }
 
             return getReq(apiRoot + '/users/' + username, function(res) {
                 cacheUser(key, res);
-                cb(res);
-            }, failcb);
+                callback(res);
+            }, failCallback);
         },
         cacheUser = function(key, res) {
             if ( ! res.login) return;
