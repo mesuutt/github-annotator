@@ -176,9 +176,17 @@
                 API.getRepo(hrefSplit[1], hrefSplit[2], function(res) {
                     repoTooltip($self, res);
                 }, function(req) {
+                    var error;
+                    if (req.status == 403) {
+                        error = '<span>Github limits requests to 60 per hour for unauthenticated requests :( </span>';
+                        error +=  '<span>Error message : ' + JSON.parse(req.responseText)['message'] + '</span>';
+                    } else {
+                        error = JSON.parse(req.responseText)['message'];
+                    }
+
                     repoTooltip($self, {
-                        full_name: 'error-' + hrefSplit[1] + hrefSplit[2],
-                        description: "Error : " + JSON.parse(req.responseText)['message']
+                        full_name: 'error-' + hrefSplit[1] + hrefSplit[2] ,
+                        description: '<div class="error-tooltip">' + error + '</div>'
                     });
                 });
 
@@ -188,9 +196,17 @@
                     userTooltip($self, res);
                 }, function(req) {
                     // repoTooltip is creating simple tooltip. So using it
+                    var error;
+                    if (req.status == 403) {
+                        error = '<span>Github limits requests to 60 per hour for unauthenticated requests :( </span>';
+                        error +=  '<span>Error message : ' + JSON.parse(req.responseText)['message'] + '</span>';
+                    } else {
+                        error = JSON.parse(req.responseText)['message'];
+                    }
+
                     repoTooltip($self, {
                         full_name: 'error-' + hrefSplit[1],
-                        description: "Error : " + JSON.parse(req.responseText)['message']
+                        description: '<div class="error-con">' + error + '</div>'
                     });
                 });
             }

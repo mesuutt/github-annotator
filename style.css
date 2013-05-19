@@ -29,7 +29,7 @@
     margin-left:5px;
 }
 
-.ginfo-tooltip .tooltip-content .info-con > *, .error-tooltip span {
+.ginfo-tooltip .tooltip-content .info-con > *, .error-con span {
     display:block;
     width:100%;
 }
