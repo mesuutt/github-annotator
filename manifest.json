@@ -2,7 +2,7 @@
     "content_scripts": [{
         "js": [ "jquery-1.9.1.min.js", "contentscript.js" ],
         "css": [ "style.css" ],
-        "matches": [ "https://github.com/*" ]
+        "matches": [ "https://github.com/" ] // Only works on home page
     }],
     "background": {
         "scripts": ["background.js"]
