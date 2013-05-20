@@ -1,6 +1,7 @@
 ;(function($) {
     var API = (function() {
         var apiRoot = "https://api.github.com",
+        accessToken,
         cacheRepo,
         cacheUser,
         repoCache = {},
@@ -12,6 +13,9 @@
                 activeRequest.abort();
             }
 
+            if (accessToken) {
+                url = url + '?access_token=' + accessToken;
+            }
             var xhr = $.get(url);
 
             activeRequest = xhr;
@@ -96,9 +100,11 @@
         },
         init = function() {
             var dfd = $.Deferred();
-            chrome.storage.sync.get(['cacheRepo', 'cacheUser'], function (data) {
+            chrome.storage.sync.get(['accessToken', 'cacheRepo', 'cacheUser'], function (data) {
+                accessToken = data.accessToken;
                 cacheRepo = data.cacheRepo;
                 cacheUser = data.cacheUser;
+
                 if (cacheRepo || cacheUser) {
                     loadCache().done(dfd.resolve);
                 }

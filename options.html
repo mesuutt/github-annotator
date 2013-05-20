@@ -1,10 +1,23 @@
-<div style="display:inline-block;width:100%;">
-    <p>Github limits requests to 60 per hour for unauthenticated requests. So extension cache requests for not make a new request for get repo or user informations that already fetched from Github API before but if user or repo informations updated after informations cached of the object, you can't see new informations.</p>
-    <p>Cache clearing each week automatically.</p>
-    <input type="checkbox" id="cache-repo"><label for="cache-repo">Cache repo informations</label></br>
-    <input type="checkbox" id="cache-user"><label for="cache-user">Cache user informations</label></br>
-    <input type="button" id="btn-save" value="Save">
-    <input type="button" id="btn-clear-cache" value="Clear Cache">
-</div>
-<span id="message"></span>
-<script src="options.js"></script>
+<html>
+<head>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div id="container">
+        <artiche>
+            <p>Github limits requests to 60 per hour for unauthenticated requests. The extension caches all requests to prevent unnecessary API calls. The cache expires in one week which means you won't be able to see latest information about neither the user nor the repository. Although it seems long, it should be fine for most cases. If you want to go beyond the limit (5000 requests/hour) then you will need to create a token from <a target="_blank" href="https://github.com/settings/applications">https://github.com/settings/applications</a> and use the token below. In this case, cache won't be effective.</p>
+        </artiche>
+        <section id="api-credentials">
+            Access Token : <input type="text" id="access-token" placeholder="Do not be afraid. Storing in your browser's storage only">
+        </section>
+        <section id="cache-options">
+            <input type="checkbox" id="cache-repo"><label for="cache-repo">Cache repo information</label></br>
+            <input type="checkbox" id="cache-user"><label for="cache-user">Cache user information</label></br>
+        </section>
+        <input type="button" id="btn-clear-cache" value="Clear Cache">
+        <input type="button" id="btn-save" value="Save">
+    </div>
+    <span id="message"></span>
+    <script src="options.js"></script>
+</body>
+
