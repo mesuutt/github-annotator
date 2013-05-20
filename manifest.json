@@ -2,7 +2,7 @@
     "name": "Github user & repo informations on news feed",
     "description": "Show user and repo informations on news feed",
     "manifest_version": 2,
-    "version": "0.3",
+    "version": "0.4",
     "permissions": [ "storage"],
     "content_scripts": [{
         "js": [ "jquery-1.9.1.min.js", "contentscript.js" ],
