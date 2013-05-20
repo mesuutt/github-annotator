@@ -3,7 +3,7 @@ function saveOptions() {
         cacheRepo = document.querySelector("#cache-repo").checked,
         cacheUser = document.querySelector("#cache-user").checked;
 
-    if (!accessToken) {
+    if (accessToken) {
         cacheRepo = false;
         cacheUser = false;
     }
