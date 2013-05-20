@@ -1,8 +1,8 @@
 {
-    "name": "Github user & repo informations on news feed",
-    "description": "Show user and repo informations on news feed",
+    "name": "Github Annotator",
+    "description": "Show user details and repository info in a tooltip.",
     "manifest_version": 2,
-    "version": "0.4",
+    "version": "0.5",
     "permissions": [ "storage"],
     "content_scripts": [{
         "js": [ "jquery-1.9.1.min.js", "contentscript.js" ],
