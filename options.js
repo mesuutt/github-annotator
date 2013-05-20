@@ -1,8 +1,23 @@
 function saveOptions() {
+    var cacheRepo = document.querySelector("#cache-repo").checked,
+        cacheUser = document.querySelector("#cache-user").checked;
+
     chrome.storage.sync.set({
-        'cacheRepo': document.querySelector("#cache-repo").checked,
-        'cacheUser': document.querySelector("#cache-user").checked
+        'cacheRepo': cacheRepo,
+        'cacheUser': cacheUser
     });
+
+    if (!cacheRepo) {
+        chrome.storage.sync.set({
+            'repoCache': {}
+        });
+    }
+
+    if (!cacheUser) {
+        chrome.storage.sync.set({
+            'userCache': {}
+        });
+    }
 
     message("Settings saved");
 }
