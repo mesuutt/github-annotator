@@ -1,0 +1,10 @@
+<div style="display:inline-block;width:100%;">
+    <p>Github limits requests to 60 per hour for unauthenticated requests. So extension cache requests for not make a new request for get repo or user informations that already fetched from Github API before but if user or repo informations updated after informations cached of the object, you can't see new informations.</p>
+    <p>Cache clearing each week automatically.</p>
+    <input type="checkbox" id="cache-repo"><label for="cache-repo">Cache repo informations</label></br>
+    <input type="checkbox" id="cache-user"><label for="cache-user">Cache user informations</label></br>
+    <input type="button" id="btn-save" value="Save">
+    <input type="button" id="btn-clear-cache" value="Clear Cache">
+</div>
+<span id="message"></span>
+<script src="options.js"></script>
