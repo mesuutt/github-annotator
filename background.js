@@ -4,7 +4,9 @@
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.set({
         'clearTime': +new Date(),
-        'cache': {}
+        'cache': {},
+        'cacheRepo': true,
+        'cacheUser': true
     });
 });
 

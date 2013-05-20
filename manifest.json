@@ -12,7 +12,8 @@
     "background": {
         "scripts": ["background.js"]
     },
-   "icons": {
+    "options_page": "options.html",
+    "icons": {
         "128": "icon128.png",
         "48": "icon48.png",
         "16": "icon16.png"

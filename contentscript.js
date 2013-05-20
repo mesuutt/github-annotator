@@ -65,23 +65,30 @@
         },
         cacheUser = function(key, res) {
             if ( ! res.login) return;
-            // Cache only required values
-            cache[key] = {
-                login: res.login,
-                name: res.name,
-                avatar_url: res.avatar_url,
-                public_repos: res.public_repos,
-                followers: res.followers,
-                following: res.following
-            };
+            chrome.storage.sync.get('cacheUser', function (data) {
+                if (! data.cacheUser) return;
+                // Cache only required values
+                cache[key] = {
+                    login: res.login,
+                    name: res.name,
+                    avatar_url: res.avatar_url,
+                    public_repos: res.public_repos,
+                    followers: res.followers,
+                    following: res.following
+                };
 
-            chrome.storage.sync.set({
-                'cache': cache
+                chrome.storage.sync.set({
+                    'cache': cache
+                });
             });
         },
         loadCache =  function() {
-            chrome.storage.sync.get('cache', function (data) {
-                cache = data.cache;
+            chrome.storage.sync.get(['cacheRepo', 'cacheUser'], function (data) {
+                if (! data.cacheRepo || data.cacheUser) return;
+
+                chrome.storage.sync.get('cache', function (data) {
+                    cache = data.cache;
+                });
             });
         };
 
