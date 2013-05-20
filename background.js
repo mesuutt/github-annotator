@@ -2,9 +2,11 @@
 // we make only 60 request per hour.
 
 chrome.runtime.onInstalled.addListener(function() {
+    chrome.storage.sync.clear();
     chrome.storage.sync.set({
         'clearTime': +new Date(),
-        'cache': {},
+        'userCache': {},
+        'repoCache': {},
         'cacheRepo': true,
         'cacheUser': true
     });

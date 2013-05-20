@@ -1,7 +1,8 @@
 ;(function($) {
     var API = (function() {
         var apiRoot = "https://api.github.com",
-        cache = {},
+        repoCache = {},
+        userCache = {},
         noop = function(){},
         activeRequest,
         getReq = function(url, callback, failCallback) {
@@ -28,8 +29,8 @@
         getRepo = function(owner, repo , callback, failCallback) {
             var key = 'repo_' + owner + repo;
 
-            if (cache[key]) {
-                return callback(cache[key]);
+            if (repoCache[key]) {
+                return callback(repoCache[key]);
             }
 
             return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
@@ -38,24 +39,29 @@
             }, failCallback);
         },
         cacheRepo = function(key, res) {
-            if ( ! res.description) return;
-            // Cache only required values
-            cache[key] = {
-                description: res.description,
-                full_name:  res.full_name,
-                watchers_count: res.watchers_count,
-                forks_count: res.forks_count
-            };
+            if ( ! res.full_name) return;
 
-            chrome.storage.sync.set({
-                'cache': cache
+            chrome.storage.sync.get('cacheRepo', function (data) {
+                if (! data.cacheRepo) return;
+
+                // Cache only required values
+                repoCache[key] = {
+                    description: res.description,
+                    full_name:  res.full_name,
+                    watchers_count: res.watchers_count,
+                    forks_count: res.forks_count
+                };
+
+                chrome.storage.sync.set({
+                    'repoCache': repoCache
+                });
             });
         },
         getUser = function(username, callback, failCallback) {
             var key = 'user_' + username;
 
-            if (cache[key]) {
-                return callback(cache[key]);
+            if (userCache[key]) {
+                return callback(userCache[key]);
             }
 
             return getReq(apiRoot + '/users/' + username, function(res) {
@@ -65,10 +71,12 @@
         },
         cacheUser = function(key, res) {
             if ( ! res.login) return;
+
             chrome.storage.sync.get('cacheUser', function (data) {
                 if (! data.cacheUser) return;
+
                 // Cache only required values
-                cache[key] = {
+                userCache[key] = {
                     login: res.login,
                     name: res.name,
                     avatar_url: res.avatar_url,
@@ -78,16 +86,17 @@
                 };
 
                 chrome.storage.sync.set({
-                    'cache': cache
+                    'userCache': userCache
                 });
             });
         },
         loadCache =  function() {
             chrome.storage.sync.get(['cacheRepo', 'cacheUser'], function (data) {
-                if (! data.cacheRepo || data.cacheUser) return;
+                if (!data.cacheRepo && !data.cacheUser) return;
 
-                chrome.storage.sync.get('cache', function (data) {
-                    cache = data.cache;
+                chrome.storage.sync.get(['userCache', 'repoCache'], function (data) {
+                    userCache = data.userCache;
+                    repoCache = data.repoCache;
                 });
             });
         };

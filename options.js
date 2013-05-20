@@ -10,7 +10,8 @@ function saveOptions() {
 function clearCache() {
     // Not clear. Update
     chrome.storage.sync.set({
-        'cache': {},
+        'userCache': {},
+        'repoCache': {},
         'clearTime': +new Date()
     });
 
