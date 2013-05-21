@@ -5,17 +5,17 @@
     "version": "0.6",
     "permissions": [ "storage"],
     "content_scripts": [{
-        "js": [ "jquery-1.9.1.min.js", "contentscript.js" ],
-        "css": [ "style.css" ],
+        "js": [ "js/jquery-1.9.1.min.js", "js/contentscript.js" ],
+        "css": [ "css/style.css" ],
         "matches": [ "https://github.com/" ]
     }],
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["js/background.js"]
     },
     "options_page": "options.html",
     "icons": {
-        "128": "icon128.png",
-        "48": "icon48.png",
-        "16": "icon16.png"
+        "128": "icons/icon128.png",
+        "48": "icons/icon48.png",
+        "16": "icons/icon16.png"
     }
 }
