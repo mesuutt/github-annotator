@@ -1,16 +1,4 @@
-// Keep data on localShorage, because
-// we make only 60 request per hour.
-
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.clear();
-    chrome.storage.sync.set({
-        'clearTime': +new Date(),
-        'userCache': {},
-        'repoCache': {},
-        'cacheRepo': true,
-        'cacheUser': true
-    });
-});
+chrome.runtime.onInstalled.addListener(clearCache);
 
 chrome.runtime.onStartup.addListener(function() {
     chrome.storage.sync.get('clearTime', function(data) {
@@ -18,13 +6,24 @@ chrome.runtime.onStartup.addListener(function() {
         then = new Date();
         then.setDate (then.getDate() - 7);
         if (then.getTime() > data.clearTime) {
-            chrome.storage.sync.set({
-                'clearTime': +new Date(),
-                'userCache': {},
-                'repoCache': {},
-                'cacheRepo': true,
-                'cacheUser': true
-            });
+            clearCache();
         }
     });
 });
+
+function clearCache() {
+    chrome.storage.sync.set({
+        'clearTime': +new Date(),
+        'userCache': {},
+        'repoCache': {},
+        'cacheRepo': true,
+        'cacheUser': true
+    });
+
+    chrome.storage.sync.get('accessToken', function(data) {
+        chrome.storage.sync.set({
+            'cacheRepo': !data.accessToken,
+            'cacheUser': !data.accessToken
+        });
+    });
+}

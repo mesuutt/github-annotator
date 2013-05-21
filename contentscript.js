@@ -102,14 +102,15 @@
             var dfd = $.Deferred();
             chrome.storage.sync.get(['accessToken', 'cacheRepo', 'cacheUser'], function (data) {
                 accessToken = data.accessToken;
-                cacheRepo = data.cacheRepo;
-                cacheUser = data.cacheUser;
-
-                if (cacheRepo || cacheUser) {
-                    loadCache().done(dfd.resolve);
+                if (accessToken) {
+                    dfd.resolve();
+                } else {
+                    cacheRepo = data.cacheRepo;
+                    cacheUser = data.cacheUser;
+                    if (cacheRepo || cacheUser) {
+                        loadCache().done(dfd.resolve);
+                    }
                 }
-
-                dfd.resolve();
             });
 
             return dfd.promise();
