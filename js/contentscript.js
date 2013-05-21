@@ -214,8 +214,10 @@
             });
         },
         init: function() {
-            $("#dashboard").css('overflow', 'visible');
-            $("#dashboard .news").on("mouseover", ".alert.simple .title a" , function(e) {
+            var $dashboard =  $("#dashboard"),
+            $activityTab = $(".activity-tab"),
+            $container = $dashboard.length ? $dashboard : $activityTab,
+            hoverListener = function(e) {
                 var $self = $(this),
                     hrefSplit =  $self.attr("href").split('/');
 
@@ -237,10 +239,12 @@
                 }
 
                 $self.closest(".alert.simple").css('overflow', 'visible');
-            });
+            };
 
-            $("#dashboard .news").on("mouseout", ".alert.simple .title a", function(e) {
-                $(".ginfo-tooltip").css('display', 'none');
+            $container.css('overflow', 'visible')
+                .find(".news").on("mouseover", ".alert.simple .title a:not(.branch-link)" , hoverListener)
+                .end().find(".news").on("mouseout", ".alert.simple .title a:not(.branch-link)", function(e) {
+                    $container.find(".ginfo-tooltip").css('display', 'none');
             });
         }
     };
