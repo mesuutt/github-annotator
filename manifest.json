@@ -2,7 +2,7 @@
     "name": "Github Annotator",
     "description": "Show user details and repository info in a tooltip.",
     "manifest_version": 2,
-    "version": "0.5",
+    "version": "0.6",
     "permissions": [ "storage"],
     "content_scripts": [{
         "js": [ "js/jquery-1.9.1.min.js", "js/contentscript.js" ],
