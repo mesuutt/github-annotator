@@ -134,7 +134,7 @@
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            data.description ? '<span>'+data.description+'</span>' : '' ,
+                            data.description ? '<span>' + data.description + '</span>' : '' ,
                             '<div class="starring-con">',
                                 [
                                     data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
@@ -168,9 +168,9 @@
                 var template = [
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
-                        '<div><img src="'+data.avatar_url+ '"/></div>',
+                        '<div><img src="' + data.avatar_url + '"/></div>',
                         '<div class="info-con">',
-                            '<span>'+data.name+'</span>',
+                            '<span>' + (data.name || '') + '</span>',
                             '<span>',
                                 [
                                     data.public_repos ? data.public_repos + ' repos' : '',
