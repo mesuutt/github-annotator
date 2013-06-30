@@ -39,6 +39,7 @@ function clearCache() {
 
     message("Cache cleared");
 }
+
 function restoreOptions() {
      chrome.storage.sync.get(['cacheRepo', 'cacheUser', 'accessToken'], function(data) {
 

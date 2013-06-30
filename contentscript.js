@@ -125,7 +125,14 @@
     })();
 
     var App = {
-        createRepoTooltip:  function($el, data) {
+        escapeHtml: function(str) {
+            return str.replace(/&/g, "&amp;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/</g, "&lt;");
+        },
+        createRepoTooltip:  function($el, data, notEscapeHtml) {
+            if (!data.description && !data.watchers_count && !data.forks_count) return;
+
             var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace('/', '-'));
 
             $el.removeAttr("title");
@@ -134,7 +141,7 @@
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            data.description ? '<span>'+data.description+'</span>' : '' ,
+                            '<span>' + data.description ? (notEscapeHtml ? data.description : App.escapeHtml(data.description))  : '' + '</span>',
                             '<div class="starring-con">',
                                 [
                                     data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
@@ -168,9 +175,9 @@
                 var template = [
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
-                        '<div><img src="'+data.avatar_url+ '"/></div>',
+                        '<div><img src="' + data.avatar_url + '"/></div>',
                         '<div class="info-con">',
-                            '<span>'+data.name+'</span>',
+                            '<span>' + (data.name || '') + '</span>',
                             '<span>',
                                 [
                                     data.public_repos ? data.public_repos + ' repos' : '',
@@ -211,9 +218,10 @@
             App.createRepoTooltip($el, {
                 full_name: 'error-' + $el.attr("href").replace('/', '-') ,
                 description: '<div class="error-tooltip">' + error + '</div>'
-            });
+            }, true);
         },
         init: function() {
+            console.log("App initing");
             var $dashboard =  $("#dashboard"),
             $activityTab = $(".activity-tab"),
             $container = $dashboard.length ? $dashboard : $activityTab,

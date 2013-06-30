@@ -3,15 +3,14 @@
     "description": "Show user details and repository info in a tooltip.",
     "manifest_version": 2,
     "version": "0.7",
-    "permissions": [ "storage"],
+    "permissions": ["storage"],
     "content_scripts": [{
-        "js": [ "js/jquery-1.9.1.min.js", "js/contentscript.js" ],
-        "css": [ "css/style.css" ],
-        "matches": [ "https://github.com/*", "https://github.com/*tab=activity"],
-        "include_globs" : ["https://github.com/", "https://github.com/*tab=activity"]
+        "js": [ "jquery-1.9.1.min.js", "jquery.pjax.js", "contentscript.js" ],
+        "css": [ "style.css" ],
+        "matches": [ "https://github.com/*"]
     }],
     "background": {
-        "scripts": ["js/background.js"]
+        "scripts": ["background.js"]
     },
     "options_page": "options.html",
     "icons": {
