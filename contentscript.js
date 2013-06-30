@@ -125,6 +125,11 @@
     })();
 
     var App = {
+        escapeHtml: function(str) {
+            return str.replace(/&/g, "&amp;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/</g, "&lt;");
+        },
         createRepoTooltip:  function($el, data) {
             var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace('/', '-'));
 
@@ -134,7 +139,7 @@
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            data.description ? '<span>' + data.description + '</span>' : '' ,
+                            data.description ? '<span>' + App.escapeHtml(data.description) + '</span>' : '' ,
                             '<div class="starring-con">',
                                 [
                                     data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
