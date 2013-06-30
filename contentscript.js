@@ -214,6 +214,7 @@
             });
         },
         init: function() {
+            console.log("App initing");
             var $dashboard =  $("#dashboard"),
             $activityTab = $(".activity-tab"),
             $container = $dashboard.length ? $dashboard : $activityTab,
