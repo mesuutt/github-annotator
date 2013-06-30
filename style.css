@@ -49,6 +49,10 @@
     border-left: 5px solid transparent;
 }
 
+.error-tooltip{
+    color:red;
+}
+
 .error-tooltip span {
     display: block;
     width:100%;
