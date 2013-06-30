@@ -130,7 +130,9 @@
                       .replace(/>/g, "&gt;")
                       .replace(/</g, "&lt;");
         },
-        createRepoTooltip:  function($el, data) {
+        createRepoTooltip:  function($el, data, notEscapeHtml) {
+            if (!data.description && !data.watchers_count && !data.forks_count) return;
+
             var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace('/', '-'));
 
             $el.removeAttr("title");
@@ -139,7 +141,7 @@
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            data.description ? '<span>' + App.escapeHtml(data.description) + '</span>' : '' ,
+                            '<span>' + data.description ? (notEscapeHtml ? data.description : App.escapeHtml(data.description))  : '' + '</span>',
                             '<div class="starring-con">',
                                 [
                                     data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
@@ -216,7 +218,7 @@
             App.createRepoTooltip($el, {
                 full_name: 'error-' + $el.attr("href").replace('/', '-') ,
                 description: '<div class="error-tooltip">' + error + '</div>'
-            });
+            }, true);
         },
         init: function() {
             console.log("App initing");
