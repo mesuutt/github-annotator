@@ -32,14 +32,14 @@
 
             return xhr;
         },
-        getRepo = function(owner, repo , callback, failCallback) {
-            var key = 'repo_' + owner + repo;
+        getRepo = function(repoUrl , callback, failCallback) {
+            var key = 'repo_' + repoUrl;
 
             if (repoCache[key]) {
                 return callback(repoCache[key]);
             }
 
-            return getReq(apiRoot + '/repos/' + owner + '/' + repo, function(res) {
+            return getReq(apiRoot + '/repos/' + repoUrl, function(res) {
                 addRepoToCache(key, res);
                 callback(res);
             }, failCallback);
@@ -216,7 +216,7 @@
             }
 
             App.createRepoTooltip($el, {
-                full_name: 'error-' + $el.attr("href").replace('/', '-') ,
+                full_name: 'error-' + $el.text().replace('/', '-') ,
                 description: '<div class="error-tooltip">' + error + '</div>'
             }, true);
         },
@@ -226,12 +226,10 @@
             $activityTab = $(".activity-tab"),
             $container = $dashboard.length ? $dashboard : $activityTab,
             hoverListener = function(e) {
-                var $self = $(this),
-                    hrefSplit =  $self.attr("href").split('/');
-
-                if (hrefSplit[2]) {
+                var $self = $(this);
+                if ($self.text().search("/") > 0) {
                     // Repo
-                    API.getRepo(hrefSplit[1], hrefSplit[2], function(res) {
+                    API.getRepo($self.text(), function(res) {
                         App.createRepoTooltip($self, res);
                     }, function(req) {
                         App.createErrorTooltip($self, req);
@@ -239,7 +237,7 @@
 
                 } else {
                     // User
-                    API.getUser(hrefSplit[1], function(res) {
+                    API.getUser($self.text(), function(res) {
                         App.createUserTooltip($self, res);
                     }, function(req) {
                         App.createErrorTooltip($self, req);
