@@ -216,7 +216,7 @@
             }
 
             App.createRepoTooltip($el, {
-                full_name: 'error-' + $el.attr("href").replace('/', '-') ,
+                full_name: 'error-' + $el.text().replace('/', '-') ,
                 description: '<div class="error-tooltip">' + error + '</div>'
             }, true);
         },
