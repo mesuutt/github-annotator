@@ -126,6 +126,8 @@
 
     var App = {
         escapeHtml: function(str) {
+            if (!str) return '';
+
             return str.replace(/&/g, "&amp;")
                       .replace(/>/g, "&gt;")
                       .replace(/</g, "&lt;");
