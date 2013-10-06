@@ -126,11 +126,13 @@
 
     var App = {
         escapeHtml: function(str) {
+            if (!str) return '';
+
             return str.replace(/&/g, "&amp;")
                       .replace(/>/g, "&gt;")
                       .replace(/</g, "&lt;");
         },
-        createRepoTooltip:  function($el, data, notEscapeHtml) {
+        createRepoTooltip:  function($el, data, isEscapeHtml) {
             if (!data.description && !data.watchers_count && !data.forks_count) return;
 
             var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace('/', '-'));
@@ -141,7 +143,7 @@
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            '<span>' + data.description ? (notEscapeHtml ? data.description : App.escapeHtml(data.description))  : '' + '</span>',
+                            '<span>' + data.description ? (isEscapeHtml ? App.escapeHtml(data.description) : data.description)  : '' + '</span>',
                             '<div class="starring-con">',
                                 [
                                     data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
@@ -218,7 +220,7 @@
             App.createRepoTooltip($el, {
                 full_name: 'error-' + $el.text().replace('/', '-') ,
                 description: '<div class="error-tooltip">' + error + '</div>'
-            }, true);
+            }, false);
         },
         init: function() {
             console.log("App initing");
@@ -230,7 +232,7 @@
                 if ($self.text().search("/") > 0) {
                     // Repo
                     API.getRepo($self.text(), function(res) {
-                        App.createRepoTooltip($self, res);
+                        App.createRepoTooltip($self, res, true);
                     }, function(req) {
                         App.createErrorTooltip($self, req);
                     });
