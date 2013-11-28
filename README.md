@@ -1,9 +1,14 @@
-Github annotator
+creenshotithub annotator
 =========
 
 Chrome extension for show user details and repository information in a tooltip on Github news feed.
 
 Add extension to your chrome from [Google web store](https://chrome.google.com/webstore/detail/github-annotator/epmbkocbfiejffcjahjhncadlipmdime)
+
+##### Screenshot:
+
+![Github-annotator](https://github.com/mesuutt/github-annotator/blob/master/screenshots/user-tooltip.png)
+![Github-annotator](https://github.com/mesuutt/github-annotator/blob/master/screenshots/repo-tooltip.png)
 
 ### License
 
