@@ -124,7 +124,7 @@
 
     })();
 
-    var App = {
+    var Extension = {
         escapeHtml: function(str) {
             if (!str) return '';
 
@@ -143,11 +143,15 @@
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            '<span>' + data.description ? (isEscapeHtml ? App.escapeHtml(data.description) : data.description)  : '' + '</span>',
+                            '<span>' + data.description
+                                ? (isEscapeHtml ? Extension.escapeHtml(data.description)
+                                : data.description)  : '' + '</span>',
                             '<div class="starring-con">',
                                 [
-                                    data.watchers_count ? '<i class="octicon octicon-star"></i>' + data.watchers_count + ' stars' : '',
-                                    data.forks_count ? '<i class="octicon octicon-git-branch"></i>' + data.forks_count +' forks' : ''
+                                    data.watchers_count ? '<i class="octicon octicon-star"></i>'
+                                        + data.watchers_count + ' stars' : '',
+                                    data.forks_count ? '<i class="octicon octicon-git-branch"></i>'
+                                        + data.forks_count +' forks' : ''
                                 ].filter(function(item){ return item; }).join('  '),
                             '</div>',
                         '</div>',
@@ -157,7 +161,7 @@
                 $tooltip = $('<div />', {
                     'id' : 'repo-tooltip-' + data.full_name.replace('/', '-'),
                     'class' : 'ginfo-tooltip repo-tooltip',
-                    html : template.filter(function(item){ return item;}).join('') // Remove Description's span if empty
+                    'html' : template.filter(function(item){ return item;}).join('') // Remove desc's span if empty
                 }).appendTo($el.parent());
             }
 
@@ -208,22 +212,23 @@
         },
         createErrorTooltip: function($el, req) {
             var error;
+
             if (req.status == 403) {
                 var errorMsg = '<span>Github limits requests to 60 per hour for unauthenticated requests.</span>';
-                    errorMsg += '<span>If you want to go beyond the limit (5000 requests/hour) then look at options page under Settings->Extensions </span>';
+                    errorMsg += '<span>If you want to go beyond the limit (5000 requests/hour)';
+                    errorMsg += ' then look at options page under Settings->Extensions </span>';
                 error = errorMsg;
                 error +=  '<span>Error message : ' + JSON.parse(req.responseText)['message'] + '</span>';
             } else {
                 error = JSON.parse(req.responseText)['message'];
             }
 
-            App.createRepoTooltip($el, {
+            Extension.createRepoTooltip($el, {
                 full_name: 'error-' + $el.text().replace('/', '-') ,
                 description: '<div class="error-tooltip">' + error + '</div>'
             }, false);
         },
         init: function() {
-            console.log("App initing");
             var $dashboard =  $("#dashboard"),
             $activityTab = $(".activity-tab"),
             $container = $dashboard.length ? $dashboard : $activityTab,
@@ -232,17 +237,17 @@
                 if ($self.text().search("/") > 0) {
                     // Repo
                     API.getRepo($self.text(), function(res) {
-                        App.createRepoTooltip($self, res, true);
+                        Extension.createRepoTooltip($self, res, true);
                     }, function(req) {
-                        App.createErrorTooltip($self, req);
+                        Extension.createErrorTooltip($self, req);
                     });
 
                 } else {
                     // User
                     API.getUser($self.text(), function(res) {
-                        App.createUserTooltip($self, res);
+                        Extension.createUserTooltip($self, res);
                     }, function(req) {
-                        App.createErrorTooltip($self, req);
+                        Extension.createErrorTooltip($self, req);
                     });
                 }
 
@@ -257,6 +262,6 @@
         }
     };
 
-    API.init().done(App.init);
+    API.init().done(Extension.init);
 
 })(jQuery);
