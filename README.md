@@ -7,8 +7,8 @@ Add extension to your chrome from [Google web store](https://chrome.google.com/w
 
 ##### Screenshot:
 
-![Github-annotator](https://github.com/mesuutt/github-annotator/blob/master/screenshots/user-tooltip.png)
-![Github-annotator](https://github.com/mesuutt/github-annotator/blob/master/screenshots/repo-tooltip.png)
+![Github-annotator](https://raw.github.com/mesuutt/github-annotator/master/screenshots/user-tooltip.png)
+![Github-annotator](https://raw.github.com/mesuutt/github-annotator/master/screenshots/repo-tooltip.png)
 
 ### License
 
