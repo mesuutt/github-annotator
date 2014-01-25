@@ -8,7 +8,7 @@
     color: #fff;
 }
 .user-tooltip {
-    height:35px;
+    height:auto;
 }
 
 .ginfo-tooltip .tooltip-content {
@@ -17,15 +17,12 @@
 }
 .user-tooltip .tooltip-content img {
     width:35px;
-}
-
-.user-tooltip .tooltip-content div {
-    display: inline-block;
-    float: left;
-    height: inherit;
+    float:left;
 }
 
 .user-tooltip .tooltip-content .info-con {
+    display: inline-block;
+    float: left;
     margin-left:5px;
 }
 

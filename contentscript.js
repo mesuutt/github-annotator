@@ -168,7 +168,7 @@
             $tooltip.css({
                 left: $el.position().left,
                 top: ($el.position().top - ($tooltip.outerHeight(true) + 5)),
-                display: 'inline-table'
+                display: 'block'
             });
 
             return  $tooltip;
@@ -181,7 +181,7 @@
                 var template = [
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
-                        '<div><img src="' + data.avatar_url + '"/></div>',
+                        '<img src="' + data.avatar_url + '"/>',
                         '<div class="info-con">',
                             '<span>' + (data.name || '') + '</span>',
                             '<span>',
@@ -205,7 +205,7 @@
             $tooltip.css({
                 left: $el.position().left,
                 top: ($el.position().top - ($tooltip.outerHeight(true) + 5)),
-                display: 'inline-table'
+                display: 'block'
             });
 
             return  $tooltip;
