@@ -168,7 +168,7 @@
             $tooltip.css({
                 left: $el.position().left,
                 top: ($el.position().top - ($tooltip.outerHeight(true) + 5)),
-                display: 'block'
+                display: 'inline-block'
             });
 
             return  $tooltip;
@@ -205,7 +205,7 @@
             $tooltip.css({
                 left: $el.position().left,
                 top: ($el.position().top - ($tooltip.outerHeight(true) + 5)),
-                display: 'block'
+                display: 'inline-block'
             });
 
             return  $tooltip;
