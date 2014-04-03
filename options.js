@@ -1,16 +1,19 @@
 function saveOptions() {
     var accessToken = document.querySelector("#access-token").value,
+        cacheUser = document.querySelector("#cache-user").checked,
         cacheRepo = document.querySelector("#cache-repo").checked,
-        cacheUser = document.querySelector("#cache-user").checked;
+        cacheGist = document.querySelector("#cache-gist").checked
 
     if (accessToken) {
-        cacheRepo = false;
         cacheUser = false;
+        cacheRepo = false;
+        cacheGist = false;
     }
 
     chrome.storage.sync.set({
-        'cacheRepo': cacheRepo,
         'cacheUser': cacheUser,
+        'cacheRepo': cacheRepo,
+        'cacheGist': cacheRepo,
         'accessToken': accessToken
     });
 
@@ -26,6 +29,12 @@ function saveOptions() {
         });
     }
 
+    if (!cacheGist) {
+        chrome.storage.sync.set({
+            'userGist': {}
+        });
+    }
+
     message("Settings saved");
 }
 
@@ -34,6 +43,7 @@ function clearCache() {
     chrome.storage.sync.set({
         'userCache': {},
         'repoCache': {},
+        'gistCache': {},
         'clearTime': +new Date()
     });
 
@@ -41,16 +51,18 @@ function clearCache() {
 }
 
 function restoreOptions() {
-     chrome.storage.sync.get(['cacheRepo', 'cacheUser', 'accessToken'], function(data) {
+     chrome.storage.sync.get(['cacheRepo', 'cacheGist',, 'cacheUser', 'accessToken'], function(data) {
 
         if (data.accessToken) {
             document.querySelector("#access-token").value = data.accessToken;
             data.cacheRepo = false;
             data.cacheUser = false;
+            data.cacheGist = false;
         }
 
-        document.querySelector("#cache-repo").checked = data.cacheRepo;
         document.querySelector("#cache-user").checked = data.cacheUser;
+        document.querySelector("#cache-repo").checked = data.cacheRepo;
+        document.querySelector("#cache-gist").checked = data.cacheGist;
      });
 }
 
