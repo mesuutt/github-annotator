@@ -16,14 +16,17 @@ function clearCache() {
         'clearTime': +new Date(),
         'userCache': {},
         'repoCache': {},
+        'gistCache': {},
         'cacheRepo': true,
+        'cacheGist': true,
         'cacheUser': true
     });
 
     chrome.storage.sync.get('accessToken', function(data) {
         chrome.storage.sync.set({
+            'cacheUser': !data.accessToken,
             'cacheRepo': !data.accessToken,
-            'cacheUser': !data.accessToken
+            'cacheGist': !data.accessToken
         });
     });
 }
