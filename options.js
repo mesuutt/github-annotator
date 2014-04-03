@@ -73,12 +73,8 @@ function message(msg) {
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.querySelector('#btn-save').addEventListener('click', saveOptions);
 document.querySelector('#btn-clear-cache').addEventListener('click', clearCache);
+
 document.querySelector('#access-token').addEventListener('change', function() {
-    if (this.value) {
-        document.querySelector('#cache-options').style.display = 'none';
-        document.querySelector('#btn-clear-cache').style.display = 'none';
-    } else {
-        document.querySelector('#cache-options').style.display = 'block';
-        document.querySelector('#btn-clear-cache').style.display = 'inline-block';
-    }
+    document.querySelector('#cache-options').style.display = this.value ? 'none' : 'block';
+    document.querySelector('#btn-clear-cache').style.display = this.value ? 'none': 'inline-block';
 });
