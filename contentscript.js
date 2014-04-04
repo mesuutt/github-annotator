@@ -62,14 +62,14 @@
                 'repoCache': repoCache
             });
         },
-        getGist = function(endpoint , callback, failCallback) {
-            var key = 'gist_' + endpoint;
+        getGist = function(id , callback, failCallback) {
+            var key = 'gist_' + id;
 
             if (gistCache[key]) {
                 return callback(gistCache[key]);
             }
 
-            return getReq(apiRoot + '/gists/' + endpoint, function(res) {
+            return getReq(apiRoot + '/gists/' + id, function(res) {
                 addRepoToCache(key, res);
                 callback(res);
             }, failCallback);
@@ -299,28 +299,28 @@
                     regexpRepo = /(?:^https\:\/\/github\.com)?\/(([\w\d_.-]+)\/([\w\d_.-]+))$/,
                     regexpGist = /(?:^https\:\/\/gist\.github\.com\/)([\d]+)$/,
                     $self = $(this),
-                    href = $self.attr('href'),
-                    endpoint
+                    href = $self.attr('href')
 
                 if (regexpUser.test(href)) {
-                    endpoint = href.match(regexpUser)[1];
+                    var username = href.match(regexpUser)[1];
 
-                    API.getUser(endpoint, function(res) {
+                    API.getUser(username, function(res) {
                         Extension.createUserTooltip($self, res);
                     }, function(req) {
                         Extension.createErrorTooltip($self, req);
                     });
                 } else if (regexpGist.test(href)){
-                    endpoint = href.match(regexpGist)[1];
+                    var gistId = href.match(regexpGist)[1];
 
-                    API.getGist(endpoint, function(res) {
+                    API.getGist(gistId, function(res) {
                         Extension.createGistTooltip($self, res, true);
                     }, function(req) {
                         Extension.createErrorTooltip($self, req);
                     });
                 } else if (regexpRepo.test(href)) {
-                    endpoint = href.match(regexpRepo)[1];
-                    API.getRepo(endpoint, function(res) {
+                    var repoPath = href.match(regexpRepo)[1];
+
+                    API.getRepo(repoPath, function(res) {
                         Extension.createRepoTooltip($self, res, true);
                     }, function(req) {
                         Extension.createErrorTooltip($self, req);
