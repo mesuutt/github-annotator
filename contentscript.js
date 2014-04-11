@@ -295,14 +295,15 @@
             $activityTab = $(".activity-tab"),
             $container = $dashboard.length ? $dashboard : $activityTab,
             hoverListener = function(e) {
-                var regexpUser = /(?:^https\:\/\/github\.com\/)([\w\d_.-]+)$/,
+                var regexpUser = /(?:^(https\:\/\/github\.com)?\/)([\w\d_.-]+)$/,
                     regexpRepo = /(?:^https\:\/\/github\.com)?\/(([\w\d_.-]+)\/([\w\d_.-]+))$/,
                     regexpGist = /(?:^https\:\/\/gist\.github\.com\/)([\d]+)$/,
                     $self = $(this),
                     href = $self.attr('href')
 
                 if (regexpUser.test(href)) {
-                    var username = href.match(regexpUser)[1];
+                    var matches = href.match(regexpUser), // Match 2 or 3
+                        username = matches[matches.length -1];
 
                     API.getUser(username, function(res) {
                         Extension.createUserTooltip($self, res);
