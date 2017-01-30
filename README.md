@@ -12,10 +12,6 @@ Add extension to your chrome from [Google web store](https://chrome.google.com/w
 
 ![Github-annotator](https://raw.github.com/mesuutt/github-annotator/master/screenshots/repo-tooltip.png)
 
-#### TODO:
-
-Add pjax support for work on user's Public Activity tab.
-
 
 ### License
 
