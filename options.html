@@ -5,7 +5,7 @@
 <body>
     <div id="container">
         <artiche>
-            <p>Github limits requests to 60 per hour for unauthenticated requests. The extension caches all requests to prevent unnecessary API calls. The cache expires in one week which means you won't be able to see latest information about neither the user nor the repository. Although it seems long, it should be fine for most cases. If you want to go beyond the limit (5000 requests/hour) then you will need to create an Personal API Access Token from <a target="_blank" href="https://github.com/settings/applications">https://github.com/settings/applications</a> and use the token below(Access token not storing elsewhere from your browser). In this case, cache won't be effective.</p>
+            <p>Github limits requests to 60 per hour for unauthenticated requests. The extension caches all requests to prevent unnecessary API calls. The cache expires in one week which means you won't be able to see latest information about neither the user nor the repository. Although it seems long, it should be fine for most cases. If you want to increase API request limit to 5000 requests per hour then you will need to create an Personal API Access Token from <a target="_blank" href="https://github.com/settings/tokens">https://github.com/settings/tokens</a> (you don't need to select any scopes when creating API token. The extension doesn't need to any special perm) and use the token below(Access token not storing elsewhere from your browser). In this case, cache won't be effective.</p>
         </artiche>
         <section id="api-credentials">
             Access Token : <input type="text" id="access-token" placeholder="Do not be afraid. Storing in your browser's storage only">

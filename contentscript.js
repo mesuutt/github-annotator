@@ -277,9 +277,9 @@
             var error;
 
             if (req.status == 403) {
-                var errorMsg = '<span>Github limits requests to 60 per hour for unauthenticated requests.</span>';
-                    errorMsg += '<span>If you want to go beyond the limit (5000 requests/hour)';
-                    errorMsg += ' then look at options page under Settings->Extensions </span>';
+                var errorMsg = '<span>Github limits requests to 60 per hour for unauthenticated API requests.</span>';
+                    errorMsg += '<span>If you want to increase API request limit to 5000 requests/hour';
+                    errorMsg += ' then look at Github Annotator\'s options page under Settings->Extensions</span>';
                 error = errorMsg;
                 error +=  '<span>Error message : ' + JSON.parse(req.responseText)['message'] + '</span>';
             } else {
