@@ -166,17 +166,18 @@
         createRepoTooltip:  function($el, data, isEscapeHtml) {
             if (!data.description && !data.watchers_count && !data.forks_count) return;
 
+            var description = isEscapeHtml ? Extension.escapeHtml(data.description) : data.description;
+            description = description.replace(/\:[a-z_]+\:\s/g, '')  // Remove emoji codes
+
             var $tooltip = $el.siblings('#repo-tooltip-' + data.full_name.replace(/[^\w]+/g, '-'));
 
             $el.removeAttr("title");
-            if (! $tooltip.length) {
+            if (!$tooltip.length) {
                 var template = [
                     '<i class="arrow-down"></i>',
                     '<div class="tooltip-content">',
                         '<div class="info-con">',
-                            '<span>' + data.description
-                                ? (isEscapeHtml ? Extension.escapeHtml(data.description)
-                                : data.description)  : '' + '</span>',
+                            '<span>' + description + '</span>',
                             '<div class="starring-con">',
                                 [
                                     data.watchers_count ? '<i class="octicon octicon-star"></i>'
@@ -292,8 +293,6 @@
         },
         init: function() {
             var $dashboard =  $("#dashboard"),
-            $activityTab = $(".activity-tab"),
-            $container = $dashboard.length ? $dashboard : $activityTab,
             hoverListener = function(e) {
                 var regexpUser = /(?:^(https\:\/\/github\.com)?\/)([\w\d_.-]+)$/,
                     regexpRepo = /(?:^https\:\/\/github\.com)?\/(([\w\d_.-]+)\/([\w\d_.-]+))$/,
@@ -331,10 +330,10 @@
                 $self.closest(".alert.simple").css('overflow', 'visible');
             };
 
-            $container.css('overflow', 'visible')
+            $dashboard.css('overflow', 'visible')
                 .find(".news").on("mouseover", "a" , hoverListener)
                 .end().find(".news").on("mouseout", "a", function(e) {
-                    $container.find(".ginfo-tooltip").css('display', 'none');
+                    $dashboard.find(".ginfo-tooltip").css('display', 'none');
             });
         }
     };
