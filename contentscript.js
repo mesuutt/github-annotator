@@ -332,8 +332,8 @@
             };
 
             $container.css('overflow', 'visible')
-                .find(".news").on("mouseover", ".alert.simple .title a:not(.branch-link)" , hoverListener)
-                .end().find(".news").on("mouseout", ".alert.simple .title a:not(.branch-link)", function(e) {
+                .find(".news").on("mouseover", "a" , hoverListener)
+                .end().find(".news").on("mouseout", "a", function(e) {
                     $container.find(".ginfo-tooltip").css('display', 'none');
             });
         }
